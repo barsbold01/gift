@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gift for You</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#ffe6f0; /* pale pink */
+      --bg2:#fff9ff; /* soft white */
+      --accent:#ff7eb3; /* pink */
+      --accent2:#7a77ff; /* lilac */
+      --ribbon:#ff3b6c; /* deeper pink */
+      --shadow:rgba(0,0,0,.15);
+      --text:#3a2e4f;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      display:grid;place-items:center;min-height:100vh;
+      background: radial-gradient(1200px 800px at 70% -10%, var(--bg2), transparent),
+                  radial-gradient(1200px 800px at -10% 80%, #fff0fa, transparent),
+                  linear-gradient(135deg, #ffe0f2, #f1ecff);
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    .wrap{
+      display:flex;flex-direction:column;align-items:center;gap:28px;
+    }
+
+    .hint{font-size:.95rem; opacity:.8}
+
+    /* GIFT BOX */
+    .stage{position:relative;width:min(80vw,420px);height:min(80vw,420px);display:grid;place-items:center}
+
+    .gift{position:relative;width:min(48vw,220px);height:min(48vw,220px);cursor:pointer; user-select:none;}
+    .gift:active{transform:translateY(1px)}
+
+    /* base */
+    .box{position:absolute;left:0;bottom:0;width:100%;height:70%;
+      background:linear-gradient(180deg, #fff4fb, #ffd1e6);
+      border-radius:16px; box-shadow:0 16px 40px var(--shadow), inset 0 2px 0 #fff;
+      overflow:hidden;
+    }
+
+    /* lid */
+    .lid{position:absolute;left:0;bottom:70%;width:100%;height:38%;
+      transform-origin:50% 100%;
+      background:linear-gradient(180deg, #ffe7f3, #ffc2da);
+      border-radius:14px; box-shadow:0 12px 28px var(--shadow), inset 0 2px 0 #fff;
+      transition:transform .7s cubic-bezier(.22,1,.36,1), translate .7s cubic-bezier(.22,1,.36,1);
+    }
+
+    /* ribbon bands */
+    .band-v, .band-h{position:absolute;inset:0;}
+    .band-v::before{content:"";position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:18%;background:linear-gradient(180deg, #ff6f9b, #ff3b6c);mix-blend:multiply}
+    .band-h::before{content:"";position:absolute;left:0;right:0;top:46%;height:20%;background:linear-gradient(180deg, #ff6f9b, #ff3b6c);mix-blend:multiply}
+
+    /* bow */
+    .bow{position:absolute; left:50%; bottom:calc(70% + 34%); transform:translateX(-50%);
+      width:120px; height:70px; pointer-events:none;
+    }
+    .loop{position:absolute; width:60px; height:60px; border:12px solid var(--ribbon); border-radius:50% 50% 0 50% / 60% 60% 0 40%;}
+    .loop.left{left:-10px; transform:rotate(-35deg)}
+    .loop.right{right:-10px; transform:scaleX(-1) rotate(-35deg)}
+    .knot{position:absolute; left:50%; top:36px; transform:translateX(-50%); width:26px; height:22px; background:var(--ribbon); border-radius:8px}
+
+    /* tag */
+    .tag{position:absolute; right:-26px; bottom:calc(70% + 8%); transform:rotate(12deg); background:white; color:var(--accent);
+      padding:6px 10px; border-radius:10px; font-weight:700; font-size:.82rem; box-shadow:0 6px 16px var(--shadow);}
+
+    /* OPEN STATE */
+    .opened .lid{transform:translateY(-110%) rotate(-14deg)}
+    .opened .bow{animation:floatUp .9s ease forwards}
+    @keyframes floatUp{to{transform:translate(-50%,-120px)}}
+
+    /* MESSAGE */
+    .message{position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; opacity:0; transition:opacity .5s ease .3s}
+    .message.show{opacity:1}
+    .title{font-family:'Great Vibes', cursive; font-size: clamp(40px, 9vw, 96px);
+      letter-spacing:1px; line-height:1; text-align:center; padding:0 .4rem;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow:0 6px 20px rgba(255, 60, 120, .25);
+      animation: glow 2.2s ease-in-out infinite alternate;
+    }
+    @keyframes glow{to{filter:drop-shadow(0 0 12px rgba(255,126,179,.8))}}
+
+    .subtitle{margin-top:8px; font-size:clamp(14px, 2.8vw, 18px); opacity:.85}
+
+    /* confetti */
+    .confetti{position:absolute; inset:-10vh 0 0 0; pointer-events:none; overflow:visible}
+    .confetti i{position:absolute; width:10px; height:10px; border-radius:2px; opacity:0; animation:fall linear forwards;}
+    @keyframes fall{0%{transform:translateY(-10vh) rotate(0); opacity:0} 10%{opacity:1} 100%{transform:translateY(110vh) rotate(720deg); opacity:0}}
+
+    /* heart particles */
+    .heart{position:absolute; width:14px; height:14px; transform:rotate(45deg)}
+    .heart::before, .heart::after{content:""; position:absolute; width:14px; height:14px; background:currentColor; border-radius:50%}
+    .heart::before{left:-7px}
+    .heart::after{top:-7px}
+
+    /* CTA button to reset */
+    .again{margin-top:6px; background:white; border:none; padding:10px 16px; border-radius:999px; box-shadow:0 8px 20px var(--shadow);
+      font-weight:600; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease}
+    .again:hover{transform:translateY(-1px); box-shadow:0 10px 26px var(--shadow)}
+
+    /* floating decor */
+    .floaty{position:absolute; filter:blur(1px); opacity:.7}
+    .blob1{width:180px; height:180px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #ffd2e8, transparent 60%); top:6%; left:6%; animation:pulse 6s ease-in-out infinite}
+    .blob2{width:260px; height:260px; border-radius:50%; background:radial-gradient(circle at 70% 30%, #e1d8ff, transparent 60%); bottom:4%; right:8%; animation:pulse 7s ease-in-out -1s infinite}
+    @keyframes pulse{50%{transform:scale(1.06)}}
+
+    /* small screens */
+    @media (max-width:420px){
+      .tag{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="stage" aria-live="polite">
+      <div class="floaty blob1" aria-hidden="true"></div>
+      <div class="floaty blob2" aria-hidden="true"></div>
+
+      <div class="gift" id="gift" role="button" aria-label="Gift box. Tap to open.">
+        <div class="box">
+          <div class="band-v"></div>
+          <div class="band-h"></div>
+        </div>
+        <div class="lid">
+          <div class="band-v"></div>
+          <div class="band-h"></div>
+        </div>
+        <div class="bow">
+          <div class="loop left"></div>
+          <div class="loop right"></div>
+          <div class="knot"></div>
+        </div>
+        <div class="tag">for her ♡</div>
+      </div>
+
+      <div class="message" id="msg">
+        <div style="text-align:center">
+          <div class="title">gudnight gurl</div>
+          <div class="subtitle">маргаашийг эрч хүчтэй угтаарай (FROM ZULA) ✨</div>
+          <button class="again" id="again" aria-label="Close gift and try again">Дахин нээх</button>
+        </div>
+      </div>
+
+      <div class="confetti" id="confetti"></div>
+    </div>
+    <div class="hint">🎁 хайрцаг дээр дараад үздээ gurlie.</div>
+  </div>
+
+  <script>
+    const gift = document.getElementById('gift');
+    const msg = document.getElementById('msg');
+    const confetti = document.getElementById('confetti');
+    const again = document.getElementById('again');
+
+    let opened = false;
+
+    function random(min, max){return Math.random()*(max-min)+min}
+
+    function popConfetti(){
+      confetti.innerHTML = '';
+      const pieces = 70;
+      for(let i=0;i<pieces;i++){
+        const useHeart = Math.random() < 0.35;
+        const el = document.createElement(useHeart ? 'span' : 'i');
+        if(useHeart){
+          el.className = 'heart';
+          el.style.color = Math.random() < 0.5 ? 'var(--accent)' : 'var(--accent2)';
+        }else{
+          el.style.background = Math.random() < 0.5 ? 'var(--accent)' : 'var(--accent2)';
+          el.style.borderRadius = Math.random() < 0.5 ? '2px' : '50%';
+        }
+        el.style.left = random(0, 100) + 'vw';
+        el.style.top = random(-10, 0) + 'vh';
+        el.style.width = random(6, 14) + 'px';
+        el.style.height = el.style.width;
+        const dur = random(3.2, 6.5);
+        el.style.animationDuration = dur + 's';
+        confetti.appendChild(el);
+      }
+    }
+
+    function openGift(){
+      if(opened) return;
+      opened = true;
+      gift.classList.add('opened');
+      msg.classList.add('show');
+      popConfetti();
+    }
+
+    function resetGift(){
+      opened = false;
+      gift.classList.remove('opened');
+      msg.classList.remove('show');
+      confetti.innerHTML = '';
+    }
+
+    gift.addEventListener('click', openGift);
+    again.addEventListener('click', resetGift);
+
+    // Also allow pressing Enter/Space when focused
+    gift.setAttribute('tabindex','0');
+    gift.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        openGift();
+      }
+    });
+  </script>
+</body>
+</html>
