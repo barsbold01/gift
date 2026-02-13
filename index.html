@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd6eb 100%);
+            min-height: 100vh;
+        }
+
+        /* Floating hearts animation */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: floatHeart 6s ease-in-out infinite;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Screen container */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Welcome Screen */
+        #welcome-screen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .welcome-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 600px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .welcome-content h1 {
+            font-size: 3.5em;
+            color: #ff1493;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+
+        .welcome-content p {
+            font-size: 1.3em;
+            color: #ff69b4;
+            margin-bottom: 30px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+        }
+
+        /* Selection Screens */
+        .selection-screen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .selection-content {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .selection-content h2 {
+            font-size: 2.5em;
+            color: #ff1493;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+            border: 3px solid transparent;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(255, 105, 180, 0.4);
+            border-color: #ff69b4;
+        }
+
+        .option-card.selected {
+            border-color: #ff1493;
+            background: linear-gradient(135deg, #ffe0f0 0%, #ffeef8 100%);
+        }
+
+        .option-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-card h3 {
+            color: #ff1493;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .option-card p {
+            color: #ff69b4;
+            font-size: 1em;
+        }
+
+        /* Final Screen */
+        #final-screen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .final-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 700px;
+        }
+
+        .final-content h2 {
+            font-size: 3em;
+            color: #ff1493;
+            margin-bottom: 30px;
+        }
+
+        .final-message {
+            font-size: 1.5em;
+            color: #ff69b4;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .choices-summary {
+            background: linear-gradient(135deg, #ffe0f0 0%, #ffeef8 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .choices-summary h3 {
+            color: #ff1493;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .choice-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff69b4;
+        }
+
+        .choice-item strong {
+            color: #ff1493;
+        }
+
+        /* Progress indicator */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ffc0cb;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #ff1493;
+            transform: scale(1.3);
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #ffc0cb;
+            border-top: 4px solid #ff1493;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .welcome-content h1 {
+                font-size: 2.5em;
+            }
+
+            .welcome-content {
+                padding: 40px 30px;
+            }
+
+            .selection-content h2 {
+                font-size: 2em;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .final-content h2 {
+                font-size: 2.2em;
+            }
+        }
+
+        /* Music control */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+
+        .music-control span {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts background -->
+    <div class="hearts-container" id="hearts-container"></div>
+
+    <!-- Music control (optional) -->
+    <div class="music-control" id="music-control" onclick="toggleMusic()">
+        <span id="music-icon">🔇</span>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="screen active" id="welcome-screen">
+        <div class="welcome-content">
+            <h1>Баярын мэнд хүргэе</h1>
+            <p> A SMALL INVITATION FOR KURUR GURLIE...</p>
+            <button class="btn" onclick="startJourney()">ДАРНА УУ ✨</button>
+        </div>
+    </div>
+    <!-- Screen 1: First Selection -->
+    <div class="screen selection-screen" id="screen1">
+        <div class="selection-content">
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <h2>ЭРХЭМ ХҮНДЭТ GURLIE ҮҮНЭЭС СОНГОНО УУ</h2>
+            <div class="options-grid">
+                <div class="option-card" onclick="selectOption(1, 'гадуур зугаалах', this)">
+                    <img src="hot.webp" alt="Adventure" class="option-image">
+                    <h3>гадуур зугаалах</h3>
+                    <p>хотын сонирхолтой газрууд</p>
+                </div>
+                <div class="option-card" onclick="selectOption(1, 'тайван газар суух', this)">
+                    <img src="cafe.webp" alt="Cozy" class="option-image">
+                    <h3>тайван газар суух</h3>  
+                    <p>тав тухтай чимээ багатай (coffe shop)</p>
+                </div>
+                <div class="option-card" onclick="selectOption(1, 'котокoop гулгах', this)">
+                    <img src="kotok.webp" alt="Laughter" class="option-image">
+                    <h3>котокoop гулгах</h3>
+                    <p></p>
+                </div>
+            </div>
+            <button class="btn" id="next1" onclick="nextScreen(2)" style="display: none;">дарна уу  </button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Second Selection -->
+    <div class="screen selection-screen" id="screen2">
+        <div class="selection-content">
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+            </div>
+            <h2>ХҮССЭНЭЭ СОНГООРОЙ AMTTAH 😊</h2>
+            <div class="options-grid">
+                <div class="option-card" onclick="selectOption(2, 'THE COFFEE HOUSE MONGOLIA', this)">
+                    <img src="485376923_1059179839577786_5240504828428351588_n.jpg" alt="Sunset" class="option-image">
+                    <h3>THE COFFEE HOUSE MONGOLIA</h3>
+                    <p>ice cream and some deserts and can do some mini canva</p>
+                </div>
+                <div class="option-card" onclick="selectOption(2, 'JURUR', this)">
+                    <img src="592529657_1294766189350814_3469300754227730653_n.jpg" alt="Surprise" class="option-image">
+                    <h3>JURUR</h3>
+                    <p>have a some cakes and bakery</p>
+                </div>
+                <div class="option-card" onclick="selectOption(2, 'BELCHIKA DESERT', this)">
+                    <img src="624109108_18105681622762708_4134666596265842764_n.jpg" alt="Talks" class="option-image">
+                    <h3>BELCHIKA DESERT</h3>
+                    <p>like an ice cream dessert and have some another deserts</p>
+               </div>
+                <div class="option-card" onclick="selectOption(2, 'her choice', this)">
+                    <img src="ab323b5c2e947b2dd9012a11312fd7dc.webp" alt="Dancing" class="option-image">
+                    <h3>GURLIE ӨӨРИИН СОНГОХ ЗҮЙЛИЙГ ХЭЛЖ БОЛНО<h3>
+                    <p></p>
+                </div>
+            </div>
+             <button class="btn" id="next2" onclick="nextScreen(3)" style="display: none;">Next 💖</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: Third Selection -->
+    <div class="screen selection-screen" id="screen3">
+        <div class="selection-content">
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+            </div>
+            <h2>WHAT YOU WANNA EAT? 🌹</h2>
+            <div class="options-grid">
+                <div class="option-card" onclick="selectOption(3, 'dinner', this)">
+                    <img src="" alt="Dinner" class="option-image">
+                    <h3> Dinner</h3>
+                    <p></p>
+                </div>
+                <div class="option-card" onclick="selectOption(3, 'Movie lunch', this)">
+                    <img src="" alt="Movie" class="option-image">
+                    <h3>Movie lunch</h3>
+                    <p></p>
+                </div>
+                <div class="option-card" onclick="selectOption(3, 'lunch', this)">
+                    <img src="" alt="Beach" class="option-image">
+                    <h3>lunch</h3>
+                    <p></p>
+                </div>
+            </div>
+            <button class="btn" id="next3" onclick="showFinal()" style="display: none;">click it 💝</button>
+        </div>
+    </div>
+
+    <!-- Final Screen -->
+    <div class="screen" id="final-screen">
+        <div class="final-content">
+            <h2>Thank You My Gurlie ❤️</h2>
+            <p class="final-message">
+                i hope you enjoyed it.<br>
+                <strong>vnsii ma gurlie</strong>
+            </p>
+            <div class="choices-summary">
+                <h3>Your Choices:</h3>
+                <div class="choice-item">
+                    <strong>love:</strong><br>
+                    <span id="choice1">-</span>
+                </div>
+                <div class="choice-item">
+                    <strong>smile:</strong><br>
+                    <span id="choice2">-</span>
+                </div>
+                <div class="choice-item">
+                    <strong>date:</strong><br>
+                    <span id="choice3">-</span>
+                </div>
+            </div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="color: #ff69b4;">Sending your choices...</p>
+            </div>
+            <p style="color: #ff1493; margin-top: 20px;">💌 Your responses have been sent zalo 💌</p>
+        </div>
+    </div>
+
+    <!-- Optional: Background music audio element -->
+    <audio id="bg-music" loop>
+        <!-- Add your music file here -->
+        <!-- <source src="romantic-music.mp3" type="audio/mpeg"> -->
+    </audio>
+
+    <script>
+        // Store user selections
+        const selections = {
+            choice1: '',
+            choice2: '',
+            choice3: ''
+        };
+
+        // ===== BACKEND CONFIGURATION =====
+        // Option A: Google Apps Script Web App URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4Xb34Hxxx4vKaTxFc4ZEsNlHGW4iwcKUSmwAwGzfn6JMq62EFBq_2SVHX8DbqCv_L/exec';
+        
+        // Option B: Your backend server URL (if using Node.js)
+        const BACKEND_URL = 'http://localhost:3000/submit';
+        
+        // Choose which backend to use
+        const USE_GOOGLE_SCRIPT = true; // Set to false to use Node.js backend
+        // =================================
+
+        // Generate floating hearts
+        function createFloatingHearts() {
+            const container = document.getElementById('hearts-container');
+            const hearts = ['💕', '💖', '💗', '💝', '💓', '❤️', '💞'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 8000);
+            }, 800);
+        }
+
+        // Start the journey
+        function startJourney() {
+            switchScreen('welcome-screen', 'screen1');
+        }
+
+        // Switch between screens
+        function switchScreen(fromId, toId) {
+            const fromScreen = document.getElementById(fromId);
+            const toScreen = document.getElementById(toId);
+            
+            fromScreen.style.opacity = '0';
+            setTimeout(() => {
+                fromScreen.classList.remove('active');
+                toScreen.classList.add('active');
+            }, 600);
+        }
+        // Select an option
+        function selectOption(screenNum, value, element) {
+            // Remove selection from siblings
+            const siblings = element.parentElement.querySelectorAll('.option-card');
+            siblings.forEach(card => card.classList.remove('selected'));
+            
+            // Add selection to clicked card
+            element.classList.add('selected');
+            
+            // Store selection
+            selections[`choice${screenNum}`] = value;
+            
+            // Show next button
+            document.getElementById(`next${screenNum}`).style.display = 'inline-block';
+        }
+
+        // Go to next screen
+        function nextScreen(screenNum) {
+            const currentScreen = `screen${screenNum - 1}`;
+            const nextScreen = `screen${screenNum}`;
+            switchScreen(currentScreen, nextScreen);
+        }
+        // Show final screen and submit data
+        async function showFinal() {
+            // Update choices display
+            document.getElementById('choice1').textContent = selections.choice1;
+            document.getElementById('choice2').textContent = selections.choice2;
+            document.getElementById('choice3').textContent = selections.choice3;
+            
+            // Switch to final screen
+            switchScreen('screen3', 'final-screen');
+            
+            // Submit data to backend
+            await submitChoices();
+        }
+
+        // Submit choices to backend
+        async function submitChoices() {
+            const loading = document.getElementById('loading');
+            loading.classList.add('active');
+            
+            const data = {
+                choice1: selections.choice1,
+                choice2: selections.choice2,
+                choice3: selections.choice3,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+
+            try {
+                if (USE_GOOGLE_SCRIPT && GOOGLE_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    // Submit to Google Apps Script
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    // Submit to Node.js backend
+                    const response = await fetch(BACKEND_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to submit');
+                    }
+                }
+                
+                console.log('Choices submitted successfully!');
+            } catch (error) {
+                console.error('Error submitting choices:', error);
+                // Still show success to user even if submission fails
+            } finally {
+                setTimeout(() => {
+                    loading.classList.remove('active');
+                }, 1500);
+            }
+        }
+
+        // Music control
+        let musicPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            
+            if (musicPlaying) {
+                music.pause();
+                icon.textContent = '🔇';
+                musicPlaying = false;
+            } else {
+                music.play();
+                icon.textContent = '🔊';
+                musicPlaying = true;
+            }
+        }
+
+        // Initialize
+        createFloatingHearts();
+    </script>
+</body>
+</html>
